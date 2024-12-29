@@ -58,34 +58,35 @@ public class CarSpawner : MonoBehaviour
         {
             GameObject chosenCar = getRandomCar();
             Transform spawnPoint = getRandomPosition();
-            GameObject spawnedObject = Instantiate(chosenCar, spawnPoint.position, chosenCar.transform.rotation);
 
-            // Gold objesi değilse MoveCar başlat
-            if (chosenCar != gold)
+            // Eğer chosenCar "enemy" tag'ine sahipse, araba spawn et
+            if (chosenCar.CompareTag("enemy"))
             {
+                GameObject spawnedObject = Instantiate(chosenCar, spawnPoint.position, chosenCar.transform.rotation);
+                Debug.Log(chosenCar.name + " is the car, not the gold");
                 StartCoroutine(MoveCar(spawnedObject, getRandomSpeed()));
-                
+                Destroy(spawnedObject, 10);
             }
-            else
+            else // Eğer gold objesi ise
             {
-                Vector3 adjustedPosition = spawnedObject.transform.position;
-                adjustedPosition.y += 2;
-                spawnedObject.transform.position = adjustedPosition;
-                
-                float temp = -getRandomSpeed();
-                StartCoroutine(MoveCar(spawnedObject, 0));
-                StartCoroutine(AnimateGold(spawnedObject));
+                GameObject spawnedGold = Instantiate(chosenCar, spawnPoint.position, chosenCar.transform.rotation);
+                Vector3 adjustedPosition = spawnedGold.transform.position;
+                adjustedPosition.y += 2;  // Gold objesini biraz yukarıya yerleştir
+                spawnedGold.transform.position = adjustedPosition;
+
+                Debug.Log(chosenCar.name + " is definitely the gold");
+                StartCoroutine(AnimateGold(spawnedGold));
+                Destroy(spawnedGold, 10);
             }
 
-            Destroy(spawnedObject, 10);
-
-            StartCoroutine(multiCarSpawner());
-
+            // Süreyi güncelle
             time = Mathf.Max(minSpawnInterval, time - spawnDecreaseRate);
-
+        
+            // Bir sonraki spawn için bekleme süresi
             yield return new WaitForSeconds(time);
         }
     }
+
 
 
     private IEnumerator MoveCar(GameObject car, float speed)
@@ -125,11 +126,9 @@ public class CarSpawner : MonoBehaviour
     {
         int carNumberChance = Random.Range(0, 100);
         
-        Debug.Log("ANALİZ" + "\nAtılan zar: " + carNumberChance);
-        Debug.Log("Minimum gerekn zar:   2. araç için: " + rangeForSecondCar + "    3. araç için: " + rangeForThirdCar);
+      
         if (carNumberChance < rangeForSecondCar)
         {
-            Debug.Log("İkinci araç spawn oldu");
             
             float delay = Random.Range(0f, 3f);
             yield return new WaitForSeconds(delay);
@@ -154,7 +153,6 @@ public class CarSpawner : MonoBehaviour
             {
                 
                 GameObject chosenCar3 = getRandomCar();  
-                Debug.Log("3. araba spawn olacak: " + chosenCar3.name + " Spawn olma ihtimali: " + carNumberChance + " Atılan zar: " + carNumberChance);
                 
                 int randomIndex3 = Random.Range(0, spawnPoints.Length); 
                 while (randomIndex2 == randomIndex3)                   
