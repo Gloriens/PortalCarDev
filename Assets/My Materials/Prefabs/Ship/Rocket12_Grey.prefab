@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 23037805890295848}
   - component: {fileID: -5920547217111566451}
   - component: {fileID: -6860996575552605951}
+  - component: {fileID: 1257310972210701639}
   m_Layer: 0
   m_Name: Rocket12_Grey
   m_TagString: Untagged
@@ -125,7 +126,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aabe6b6b441d864db125754885ca982, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rocketSpeed: 5
+  explosion: {fileID: 8782218009214915327, guid: 28df87a19ab6dc9449ef3003cf3818eb, type: 3}
+  rocketSpeed: 7
+--- !u!64 &1257310972210701639
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138056836282276}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: -1
+  m_Mesh: {fileID: 4300000, guid: 707ef6dab8cc16b4bb99ed762298014f, type: 2}
 --- !u!1001 &2985901401585125935
 PrefabInstance:
   m_ObjectHideFlags: 0

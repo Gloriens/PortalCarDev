@@ -6,12 +6,13 @@ using Random = UnityEngine.Random;
 
 public class Rocket : MonoBehaviour
 {
+    public ParticleSystem explosion;
     private GameObject player;  
     private Rigidbody rb;       
     private float playerX;     
     private float randomZ;
     private float targetY;
-    public float rocketSpeed = 5f;
+    public float rocketSpeed = 7f;
 
     private void Start()
     {
@@ -62,5 +63,11 @@ public class Rocket : MonoBehaviour
     private int getRandomInt(int min, int max)
     {
         return Random.Range(min, max);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        Instantiate(explosion, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 }
