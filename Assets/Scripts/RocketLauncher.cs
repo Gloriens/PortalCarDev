@@ -1,39 +1,32 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RocketLauncher : MonoBehaviour
 {
-    public GameObject rocket;  // Roket prefab'ı
-    public GameObject player;  // Oyuncu objesi
+    public GameObject rocket;  
+    public GameObject player;  // Roketin hedefi olan oyuncu
     public float launchInterval = 2f;
     private int min = 4;
-    private int max = 8;// Roketin atılma aralığı (saniye cinsinden)
+    private int max = 8;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Coroutine başlat
-        StartCoroutine(RocketLaunch());
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        // Diğer oyun mantıkları burada olabilir
-    }
-
+    private Coroutine rocketCoroutine;
+    public float rocketSpeed = 15f; 
+    
     private IEnumerator RocketLaunch()
     {
         while (true)
         {
-            // Oyuncunun konumunu al
-            Vector3 playerPosition = player.transform.position;
+            
+            
+            Quaternion rocketRotation = Quaternion.Euler(0f,0, 250f);
+            
+            Instantiate(rocket, transform.position, rocketRotation);
 
-            // Yeni roketi yarat ve oyuncunun konumuna yerleştir
-            Instantiate(rocket, playerPosition, Quaternion.identity);
-
-            // Belirli bir süre bekle
-            yield return new WaitForSeconds(getRandomInt(min,max));
+            Debug.Log("Rocket Launched");
+            
+            yield return new WaitForSeconds(getRandomInt(min, max));  // Farklı aralıklarla roket atılacak
         }
     }
 
@@ -41,4 +34,24 @@ public class RocketLauncher : MonoBehaviour
     {
         return Random.Range(min, max);
     }
+
+    public void StartRocket()
+    {
+        if (rocketCoroutine == null)
+        {
+            Debug.Log("Roket ateşleme korotinindeyim");
+            rocketCoroutine = StartCoroutine(RocketLaunch());
+        }
+    }
+
+    public void StopRocket()
+    {
+        if (rocketCoroutine != null)
+        {
+            StopCoroutine(rocketCoroutine);
+            rocketCoroutine = null; 
+        }
+    }
+
+   
 }
