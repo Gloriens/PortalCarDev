@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 5.33, z: 0}
-  m_LocalScale: {x: 2.2253096, y: 2.2253096, z: 2.2253096}
+  m_LocalScale: {x: 3.8186312, y: 3.8186312, z: 3.8186312}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5876809805563698292}
@@ -103,6 +103,8 @@ MonoBehaviour:
   player: {fileID: 0}
   rocketLauncher1: {fileID: 7952177204279835673}
   rocketLauncher2: {fileID: 7267119335026376357}
+  rocket: {fileID: -6860996575552605951, guid: 72fec9ce41074864785fe9e22da121bf, type: 3}
+  mainCamera: {fileID: 0}
   waitTime: 5
 --- !u!1 &1004668184780298973
 GameObject:
@@ -151,7 +153,6 @@ MonoBehaviour:
   rocket: {fileID: 1138056836282276, guid: 72fec9ce41074864785fe9e22da121bf, type: 3}
   player: {fileID: 0}
   launchInterval: 2
-  rocketSpeed: 5
 --- !u!1 &2852432807727282837
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +200,6 @@ MonoBehaviour:
   rocket: {fileID: 1138056836282276, guid: 72fec9ce41074864785fe9e22da121bf, type: 3}
   player: {fileID: 0}
   launchInterval: 2
-  rocketSpeed: 5
 --- !u!1 &5450307016530104495
 GameObject:
   m_ObjectHideFlags: 0

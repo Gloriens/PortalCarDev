@@ -8,11 +8,10 @@ public class RocketLauncher : MonoBehaviour
     public GameObject rocket;  
     public GameObject player;  // Roketin hedefi olan oyuncu
     public float launchInterval = 2f;
-    private int min = 4;
-    private int max = 8;
+    private int min = 3;
+    private int max = 5;
 
     private Coroutine rocketCoroutine;
-    public float rocketSpeed = 15f; 
     
     private IEnumerator RocketLaunch()
     {
@@ -20,11 +19,7 @@ public class RocketLauncher : MonoBehaviour
         {
             
             
-            Quaternion rocketRotation = Quaternion.Euler(0f,0, 250f);
-            
-            Instantiate(rocket, transform.position, rocketRotation);
-
-            Debug.Log("Rocket Launched");
+            Instantiate(rocket, transform.position, Quaternion.identity);
             
             yield return new WaitForSeconds(getRandomInt(min, max));  // Farklı aralıklarla roket atılacak
         }
@@ -39,7 +34,6 @@ public class RocketLauncher : MonoBehaviour
     {
         if (rocketCoroutine == null)
         {
-            Debug.Log("Roket ateşleme korotinindeyim");
             rocketCoroutine = StartCoroutine(RocketLaunch());
         }
     }

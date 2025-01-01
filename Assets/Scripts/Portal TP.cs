@@ -9,7 +9,7 @@ public class PortalTP : MonoBehaviour
     public GameObject player;       // Oyuncu objesi
     private Transform orangePortalTransform;
     public LayerMask groundLayer;   // Yere raycast atarken kontrol edilecek layer
-    public float rayLength = 10f;   // Ray'in uzunluğu
+    public float rayLength = 10f; // Ray'in uzunluğu
 
     private void OnTriggerEnter(Collider other)
     {
