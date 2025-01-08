@@ -19,9 +19,9 @@ public class RocketLauncher : MonoBehaviour
         {
             
             
-            Instantiate(rocket, transform.position, Quaternion.identity);
+            GameObject newRocket = Instantiate(rocket, transform.position, Quaternion.Euler(0, 0, 240));
             
-            yield return new WaitForSeconds(getRandomInt(min, max));  // Farklı aralıklarla roket atılacak
+            yield return new WaitForSeconds(getRandomInt(min, max));  
         }
     }
 

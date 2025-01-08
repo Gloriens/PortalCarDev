@@ -10,6 +10,6 @@ public class LineCoordinates : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       transform.position = new Vector3(player.transform.position.x,transform.position.y,transform.position.z); 
+       transform.position = new Vector3(player.transform.position.x-10,transform.position.y,transform.position.z); 
     }
 }

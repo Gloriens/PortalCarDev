@@ -2,142 +2,72 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = System.Random;
 
 public class Rocket : MonoBehaviour
 {
-    public ParticleSystem explosion;
-    private GameObject player;  
-    private Rigidbody rb;
+    private GameObject target;
+    private Rigidbody rb;// Hedef objesi
+
     public bool portalMode;
-    private float forceMultiplier = 5f;
-    private int targetLane;
-    private Vector3 target;// Fırlatma kuvveti çarpanı
+    private float moveSpeed = 10f; // Fırlatma hızı
 
-
-    public GameObject LinesObject;
-    private GameObject[] lines = new GameObject[4];
-
-    private GameObject orangePortal;
-    private GameObject bluePortal;
-    private Transform bluePortalTransform;
-    
-    public float ForceMultiplier
-    {
-        get { return forceMultiplier; }  // Getter: forceMultiplier'ı döndürüyor
-        set { forceMultiplier = value; } // Setter: forceMultiplier'a değer atıyor
-    }
+    public ParticleSystem explosion;
 
     private void Start()
     {
-        lines[0] = LinesObject.transform.GetChild(0).gameObject; // line1
-        lines[1] = LinesObject.transform.GetChild(1).gameObject; // line2
-        lines[2] = LinesObject.transform.GetChild(2).gameObject; // line3
-        lines[3] = LinesObject.transform.GetChild(3).gameObject; // line4
-        
         portalMode = false;
-        if (orangePortal == null && bluePortal == null)
-        {
-            orangePortal = GameObject.FindWithTag("orangePortal");
-            bluePortal = GameObject.FindWithTag("bluePortal");
-        } 
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player"); // Oyuncuyu tag'ine göre buluyoruz
-        }
-        bluePortalTransform = bluePortal.GetComponent<Transform>();
-        rb = gameObject.GetComponent<Rigidbody>();
         
-        targetLane = getRandomInt(0, 4);
-       
-        
-    }
 
-    private void Update()
-    {
-        if (targetLane == 0)
+        if (gameObject.CompareTag("left"))
         {
-            target = lines[0].transform.position;
-            
-        }else if (targetLane == 1)
-        {
-            target = lines[1].transform.position;
-        }else if (targetLane == 2)
-        {
-            target = lines[2].transform.position;
-        }else if (targetLane == 3)
-        {
-            target = lines[3].transform.position;
+            int targetLane = UnityEngine.Random.Range(0, 2);
+            if (targetLane == 0)
+            {
+                target = GameObject.FindWithTag("line3");
+            }
+            else if (targetLane == 1)
+            {
+                target = GameObject.FindWithTag("line4");
+            }
+        }else {
+            int targetLane = UnityEngine.Random.Range(0, 2);
+            if (targetLane == 0)
+            {
+                target = GameObject.FindWithTag("line1");
+            }
+            else if (targetLane == 1)
+            {
+                target = GameObject.FindWithTag("line2");
+            }
         }
-        else
-        {
-            target = lines[0].transform.position;
-        }
+
+        // Hedefe doğru hareket etmeye başla
         FireRocket();
     }
 
     private void FireRocket()
     {
+        if (target == null) return; // Eğer hedef yoksa, işlem yapma.
 
-        if (portalMode)
-        {
-            
-            transform.LookAt(target);
-            transform.Rotate(90,0,0);
-            transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * forceMultiplier);
-        }
-        else
-        {
-            Debug.Log(target.x);
-            transform.LookAt(target);                                                                                    
-            transform.Rotate(90,0,0);                                                                                    
-            transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * forceMultiplier);      
+        // Hedefe doğru sürekli hareket et
+        StartCoroutine(MoveToTarget());
+    }
 
+    private IEnumerator MoveToTarget()
+    {
+        while (target != null && Vector3.Distance(transform.position, target.transform.position) > 0.1f)
+        {
+            // Hedefin konumuna doğru her frame'de hareket et
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, moveSpeed * Time.deltaTime);
+
+            yield return null; // Bir sonraki frame için bekle
         }
         
-    }
-    
-
-    
-
-
-    private int randomLane()
-    {
-        int randomInt = getRandomInt(1, 5);
-        switch (randomInt)
-        {
-            case 1: return 0;
-            case 2: return 1;
-            case 3: return 2;
-            case 4: return 3;
-            default: return 0;
-        }
-    }
-
-    
-    private int getRandomInt(int min, int max)
-    {
-        return UnityEngine.Random.Range(min, max);
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (portalMode)
-        {
-            rb.useGravity = false;
-            if (CompareTag("orangePortal"))
-            {
-                Quaternion rot = Quaternion.Euler(0, 180f, 90f); // Portaldaki dönüşü uygulama
-
-                
-                Vector3 newDirection = new Vector3(-1f, 0, 0); // Yönün tersini alıyoruz
-                
-                rb.AddForce(newDirection * 15f, ForceMode.Impulse);
-                
-            }
-        }else if(!portalMode) {
-            rb.useGravity = true;
-        }
+        
         // Patlama efektini başlat
         ParticleSystem instantiatedExplosion = Instantiate(explosion, transform.position, transform.rotation);
         Destroy(gameObject);
@@ -150,9 +80,5 @@ public class Rocket : MonoBehaviour
         Destroy(instantiatedExplosion.gameObject, instantiatedExplosion.main.duration);
     }
 
-    private void findLines()
-    {
-        
-    }
-    
+
 }
