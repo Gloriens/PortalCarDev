@@ -23,6 +23,7 @@ public class BossMovements : MonoBehaviour
     private bool startLanding = false;
     private bool  goLanding = false;
     private bool planeonLine = false;
+    public bool rocketControl = false;
     
 
     private float descendSpeed = 2f;
@@ -46,14 +47,13 @@ public class BossMovements : MonoBehaviour
             {
                 StartCoroutine(DramaticEntrance());
                 startLanding = true;
-                Debug.Log("inişe geçiyom");
                 
             }
         }
 
         if (goLanding)
         {
-            Debug.Log("İlk iniş");
+            
             StartCoroutine(LandtoLine());
             StartCoroutine(landingControl(32f));
 
@@ -63,7 +63,6 @@ public class BossMovements : MonoBehaviour
 
         if (startFire)
         {
-            Debug.Log("Roket ateşlenmeye başlanıyor");
             startFire = false;
             StartCoroutine(StartRocketsAfterTime(fireDelay));
 
@@ -129,34 +128,23 @@ public class BossMovements : MonoBehaviour
     {
         goLanding = false; 
         StopRockets();
-        Debug.Log("İniş başlıyor ve roketler durdu.");
         
-        yield return StartCoroutine(changePos(5, 0.1f)); // Y = 10'a iniş yap.
-
+        yield return StartCoroutine(changePos(5, 0.1f)); 
         // Hedefte bekleme
 
         StartCoroutine(StartRocketsAfterTime(0));
-        rocket.portalMode = true;
+        rocketControl = true;
         yield return new WaitForSeconds(12f);
         
-        Debug.Log("Eski pozisyona dönüyoruz.");
-        rocket.portalMode = false;
+        StopRockets();
+        rocketControl = false;
         yield return StartCoroutine(changePos(15, 0.1f));
 
-        StartCoroutine(StartRocketsAfterTime(1)); // Roketler tekrar başlatılıyor.
-        Debug.Log("Kalkış tamamlandı.");
-    }
-
-
-    IEnumerator goUp()
-    {
-        StopRockets();
-        changePos(12, 0.1f);
-        yield return new WaitForSeconds(4f);
         StartCoroutine(StartRocketsAfterTime(1));
-        Debug.Log("Kalktık");
-
+        
     }
+
+    
 
     IEnumerator landingControl(float time)
     {
@@ -166,7 +154,7 @@ public class BossMovements : MonoBehaviour
 
     IEnumerator changePos(float targetY, float threshold)
     {
-        Debug.Log($"Pozisyona hareket ediyoruz: {targetY}");
+        
         planeonLine = false;
 
         while (!planeonLine)
@@ -175,7 +163,7 @@ public class BossMovements : MonoBehaviour
             {
                 planeonLine = true; // Hedef pozisyona ulaşıldı.
                 rb.velocity = Vector3.zero;
-                Debug.Log($"Hedef pozisyona ulaşıldı: {targetY}");
+                
             }
             else
             {

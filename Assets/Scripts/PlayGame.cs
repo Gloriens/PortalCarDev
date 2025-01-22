@@ -11,14 +11,22 @@ public class PlayGame : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        cross.enabled = false;
-        
+        if (cross == null)
+        {
+            Debug.LogError("Cross Image referansı eksik!");
+        }
+        else
+        {
+            cross.enabled = false;
+        }
+    
         // Eğer musicSource devre dışıysa aktif et
         if (musicSource != null && !musicSource.enabled)
         {
             musicSource.enabled = true;
         }
     }
+
 
     public void playGame()
     {

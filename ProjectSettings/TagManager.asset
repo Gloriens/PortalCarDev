@@ -18,6 +18,8 @@ TagManager:
   - line4
   - right
   - left
+  - Boss
+  - launcher
   layers:
   - Default
   - TransparentFX
