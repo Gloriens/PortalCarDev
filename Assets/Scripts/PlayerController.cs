@@ -1,25 +1,36 @@
+using System.Collections;
+using Assets.Scripts.Common;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody rb;
+    
     public Text scoreText;
     private float score;
     private float gameTime;
-    private int gold;
+    
     public float speed;
+    private bool isAlive;
+    
+    public Camera mainCamera;
+    public ParticleSystem explode;
+    private AudioSource audio;
+    public AudioClip explodeClip;
+    private UIController uiController;
+    
 
     // Panel referansı
-    public GameObject gameOverPanel;
+    
 
     void Start()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
+        uiController = GameObject.Find("EventSystem").GetComponent<UIController>();
+        
         score = 1f;
         gameTime = 0f;
-        gameOverPanel.SetActive(false); // Başlangıçta paneli gizle
+         // Başlangıçta paneli gizle
     }
 
     private void Update()
@@ -44,7 +55,6 @@ public class PlayerController : MonoBehaviour
 
         if (rootObject.CompareTag("gold"))
         {
-            gold++;
             Debug.Log("Golda çarptım");
             Debug.Log("Önceki skor: " + score);
 
@@ -58,17 +68,39 @@ public class PlayerController : MonoBehaviour
         }
         else if (rootObject.CompareTag("enemy"))
         {
-            // Oyun bitişini göstermek ve durdurmak
-            Debug.Log("Yok olmam lazım");
-
-            // GameOver panelini aktif et
-            gameOverPanel.SetActive(true);
-
-            // Oyunu durdur
-            Time.timeScale = 0;
-
-            // Oyuncuyu yok et
-            Destroy(gameObject);
+            GameOver();
+           
         }
     }
+
+    IEnumerator Explosion()
+    {
+        // Particle efektini oluştur ve sesi çal
+        ParticleSystem temp = Instantiate(explode, transform.position, Quaternion.identity);
+        AudioSource.PlayClipAtPoint(explodeClip, mainCamera.transform.position, 1);
+
+        // Oyuncuyu devre dışı bırak ama yok etme
+        Transform playerCarModel = transform.Find("Player Car");
+        playerCarModel.SetActive(false);
+        speed = 0;
+
+        // 3 saniye bekle
+        yield return new WaitForSeconds(2);
+
+        // Particle efektini yok et
+        Destroy(temp);
+
+        // Game Over panelini göster ve oyunu durdur
+        uiController.gameOver();
+        Time.timeScale = 0;
+
+        // Oyuncuyu yok et
+    }
+
+    public void GameOver()
+    {
+        StartCoroutine(Explosion());
+    }
+
+    
 }

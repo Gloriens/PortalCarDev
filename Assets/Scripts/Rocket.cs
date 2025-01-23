@@ -13,15 +13,30 @@ public class Rocket : MonoBehaviour
     private float moveSpeed = 10f; // Fırlatma hızı
 
     public ParticleSystem explosion;
+    public ParticleSystem playerExplode;
+    public Camera mainCamera;
+    private GameObject Player;
 
     private GameObject bluePortal;
-    private GameObject orangePortal;
     private Coroutine portalCoroutine;
+    
+    private AudioSource audioSource;
+    public AudioClip firing;
+    public AudioClip explode;
 
     private void Start()
     {
+        Player = GameObject.FindGameObjectWithTag("Player");
+        if (Player == null)
+        {
+            Debug.Log("Player is null");
+        }
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = firing;
+        audioSource.volume = 0.1f;
+        audioSource.Play();
         bluePortal = GameObject.FindWithTag("bluePortal");
-        orangePortal = GameObject.FindWithTag("orangePortal");
         StartCoroutine(destroyAfterTime());
         GameObject bossObject = GameObject.FindGameObjectWithTag("Boss");
         boss = bossObject.GetComponent<BossMovements>();
@@ -69,7 +84,7 @@ public class Rocket : MonoBehaviour
         }
         else
         {
-            moveSpeed = 10f;
+            moveSpeed = 13f;
             rb.useGravity = true;
             StartCoroutine(MoveToTarget());
         }
@@ -96,7 +111,7 @@ public class Rocket : MonoBehaviour
         float z = GetRandomFloat(-0.3f, 0.3f);
         while (true)
         {
-            Vector3 targetPosition = new Vector3(transform.position.x + 1 + xOffset, transform.position.y - 0.2f, transform.position.z + z );
+            Vector3 targetPosition = new Vector3(transform.position.x + 1 + xOffset, transform.position.y - 0.4f, transform.position.z + z );
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
             yield return null;
         }
@@ -116,8 +131,11 @@ public class Rocket : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("orangePortal")! || other.gameObject.CompareTag("bluePortal")!|| boss.rocketControl == false)
+        if (other.gameObject.CompareTag("orangePortal")! || other.gameObject.CompareTag("bluePortal")! ||
+            boss.rocketControl == false)
         {
+            AudioClip audioClip = explode;
+            AudioSource.PlayClipAtPoint(audioClip, mainCamera.transform.position, 10000);
             ParticleSystem instantiatedExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(gameObject);
             Destroy(instantiatedExplosion.gameObject, instantiatedExplosion.main.duration);
@@ -128,12 +146,21 @@ public class Rocket : MonoBehaviour
     {
         if (other.gameObject.CompareTag("orangePortal"))
         {
-            Debug.Log("Portala çarptık amınake");
             StopCoroutine(portalCoroutine);
             rb.velocity = Vector3.zero;
             transform.position = new Vector3(bluePortal.transform.position.x-3,bluePortal.transform.position.y, bluePortal.transform.position.z);
             
             StartCoroutine(returntheBAAAALLSS());
+        }else if (other.gameObject.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<PlayerController>().GameOver();
+        }else if (other.gameObject.CompareTag("Boss"))
+        {
+            AudioClip audioClip = explode;
+            AudioSource.PlayClipAtPoint(audioClip, mainCamera.transform.position, 10000);
+            ParticleSystem instantiatedExplosion = Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(gameObject);
+            Destroy(instantiatedExplosion.gameObject, instantiatedExplosion.main.duration);
         }
        
     }

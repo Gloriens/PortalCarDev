@@ -7,25 +7,20 @@ public class Hearts : MonoBehaviour
     private Stack<GameObject> hearts = new Stack<GameObject>(5);
     private bool alive = true;
     public ParticleSystem boooom;
-    public GameObject heart1;
-    public GameObject heart2;
-    public GameObject heart3;
-    public GameObject heart4;
-    public GameObject heart5;
     // Start is called before the first frame update
     void Start()
     {
-        hearts.Push(heart1);
-        hearts.Push(heart2);
-        hearts.Push(heart3);
-        hearts.Push(heart4);
-        hearts.Push(heart5);
+        
+        foreach(Transform child in transform)
+        {
+            hearts.Push(child.gameObject);
+        }
     }
 
 
     public bool amIDead()
     {
-        if (hearts.Count == 0)
+        if (hearts.Count == 1)
         {
             alive = false;
         }

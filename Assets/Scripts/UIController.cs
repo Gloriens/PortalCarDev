@@ -3,14 +3,20 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class PlayGame : MonoBehaviour
+public class UIController : MonoBehaviour
 {
     public AudioSource musicSource;  // Inspector üzerinden atama yapılacak
     public Image cross;
+    private GameObject gameOverPanel;
+    private GameObject victoryPanel;
 
     // Start is called before the first frame update
     private void Start()
     {
+        gameOverPanel = GameObject.Find("Game Over Panel");
+        victoryPanel = GameObject.Find("Victory Panel");
+        gameOverPanel.SetActive(false);
+        victoryPanel.SetActive(false);
         if (cross == null)
         {
             Debug.LogError("Cross Image referansı eksik!");
@@ -91,5 +97,15 @@ public class PlayGame : MonoBehaviour
         {
             Debug.LogWarning("Cross Image bulunamadı!");
         }
+    }
+
+    public void victory()
+    {
+        victoryPanel.SetActive(true);
+    }
+
+    public void gameOver()
+    {
+        gameOverPanel.SetActive(true);
     }
 }

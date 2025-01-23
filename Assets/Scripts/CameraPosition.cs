@@ -16,6 +16,10 @@ public class CameraPosition : MonoBehaviour
     // Update is called once per frame
     private void LateUpdate()
     {
-        transform.position = target.position + offset;
+        if (target != null)
+        {
+            transform.position = target.position + offset;
+        }
+        
     }
 }

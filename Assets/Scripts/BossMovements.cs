@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Assets.Scripts.Common;
 using UnityEngine;
 
 public class BossMovements : MonoBehaviour
@@ -7,14 +8,14 @@ public class BossMovements : MonoBehaviour
     public GameObject player;
     public RocketLauncher rocketLauncher1;
     public RocketLauncher rocketLauncher2;
-    public Rocket rocket;
     public Camera mainCamera;
+    public GameObject carSpawn;
     
     private bool startFire;
     private static int fireDelay;
     
     private Rigidbody rb;
-    public float waitTime = 5f;
+    private float waitTime = 180f;
     private Vector3 offset = new Vector3(-50, 30, 0);
     private Animator anim;
 
@@ -27,35 +28,39 @@ public class BossMovements : MonoBehaviour
     
 
     private float descendSpeed = 2f;
-    private float targetHeight = 10f;
     
 
     void Start()
     {
+        
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         StartCoroutine(TeleportToPlayerOffset());
-        StartCoroutine(landingControl(20f));
+        StartCoroutine(goLandingFromSkyAfterTime(220f));
     }
 
     private void Update()
     {
-        if (timeHasCome)
+        if (player != null)
         {
-            transform.position = new Vector3(player.transform.position.x + -65, transform.position.y, 0f);
-            if (!startLanding) 
+            if (timeHasCome)
             {
-                StartCoroutine(DramaticEntrance());
-                startLanding = true;
+                transform.position = new Vector3(player.transform.position.x + -65, transform.position.y, 0f);
+                if (!startLanding) 
+                {
+                    carSpawn.GetComponent<CarSpawner>().SetActive(false);
+                    StartCoroutine(DramaticEntrance());
+                    startLanding = true;
                 
+                }
             }
         }
 
         if (goLanding)
         {
             
-            StartCoroutine(LandtoLine());
-            StartCoroutine(landingControl(32f));
+            StartCoroutine(landAndWaitOnLineMode());
+            StartCoroutine(goLandingFromSkyAfterTime(32f));
 
         }
         
@@ -124,7 +129,7 @@ public class BossMovements : MonoBehaviour
         mainCamera.fieldOfView = endValue;
     }
 
-    IEnumerator LandtoLine()
+    IEnumerator landAndWaitOnLineMode()
     {
         goLanding = false; 
         StopRockets();
@@ -146,7 +151,7 @@ public class BossMovements : MonoBehaviour
 
     
 
-    IEnumerator landingControl(float time)
+    IEnumerator goLandingFromSkyAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
         goLanding = true;

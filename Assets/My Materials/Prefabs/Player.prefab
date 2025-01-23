@@ -134,7 +134,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 200, y: 0, z: 0}
-  m_LocalScale: {x: 1.7476867, y: 1.7476867, z: 0.41515923}
+  m_LocalScale: {x: 2.2419324, y: 2.2419324, z: 1.9487664}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7701378906096536010}
@@ -202,6 +202,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreText: {fileID: 0}
   speed: 30
+  mainCamera: {fileID: 0}
+  explode: {fileID: 8782218009214915327, guid: 3e05aec18dc59394180e9fe615c92f03, type: 3}
+  explodeClip: {fileID: 8300000, guid: 7a1112cbd2b885648b49cfbd10afdf57, type: 3}
   gameOverPanel: {fileID: 0}
 --- !u!1 &7454286791104357015
 GameObject:
