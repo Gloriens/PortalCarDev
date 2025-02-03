@@ -15,16 +15,34 @@ public class UIController : MonoBehaviour
     {
         gameOverPanel = GameObject.Find("Game Over Panel");
         victoryPanel = GameObject.Find("Victory Panel");
-        gameOverPanel.SetActive(false);
-        victoryPanel.SetActive(false);
-        if (cross == null)
+        String currentScene = SceneManager.GetActiveScene().name;
+
+        try
         {
-            Debug.LogError("Cross Image referansı eksik!");
+            if (currentScene != "Main Menu")
+            {
+                gameOverPanel.SetActive(false);
+                victoryPanel.SetActive(false);
+                Debug.Log("Yorma");
+                
+                if (cross == null)
+                {
+                    Debug.LogError("Cross Image referansı eksik!");
+                }
+                else
+                {
+                    cross.enabled = false;
+                }
+            }
+            
+            
         }
-        else
+        catch (Exception e)
         {
-            cross.enabled = false;
+            Console.WriteLine(e);
+            throw;
         }
+        
     
         // Eğer musicSource devre dışıysa aktif et
         if (musicSource != null && !musicSource.enabled)
@@ -32,14 +50,32 @@ public class UIController : MonoBehaviour
             musicSource.enabled = true;
         }
     }
-
+    
+    
+    public void playNormalGame()
+    {
+        ResetGame();
+        SceneManager.LoadScene("Game");
+    }
 
     public void playGame()
     {
         ResetGame();
         
-        // "Game" sahnesini yükle
-        SceneManager.LoadScene("Game");
+        String sceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void playBossMode()
+    {
+        ResetGame();
+        SceneManager.LoadScene("BossMode");
+    }
+
+    public void playDrivingMode()
+    {
+        ResetGame();
+        SceneManager.LoadScene("DrivingMode");
     }
 
     private void ResetGame()

@@ -15,7 +15,8 @@ public class BossMovements : MonoBehaviour
     private static int fireDelay;
     
     private Rigidbody rb;
-    private float waitTime = 20f;
+    [SerializeField] private float waitTime;
+    [SerializeField] private float goLandingTime;
     private Vector3 offset = new Vector3(-50, 30, 0);
     private Animator anim;
 
@@ -36,7 +37,7 @@ public class BossMovements : MonoBehaviour
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         StartCoroutine(TeleportToPlayerOffset());
-        StartCoroutine(goLandingFromSkyAfterTime(40f));
+        StartCoroutine(goLandingFromSkyAfterTime(goLandingTime));
     }
 
     private void Update()

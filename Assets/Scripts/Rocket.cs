@@ -9,12 +9,11 @@ public class Rocket : MonoBehaviour
     private GameObject target;
     private Rigidbody rb;// Hedef objesi
 
-    public BossMovements boss;
+    private BossMovements boss;
     private float moveSpeed = 10f; // Fırlatma hızı
 
     public ParticleSystem explosion;
-    public ParticleSystem playerExplode;
-    public Camera mainCamera;
+    private Camera mainCamera;
     private GameObject Player;
 
     private GameObject bluePortal;
@@ -95,9 +94,11 @@ public class Rocket : MonoBehaviour
 
     private IEnumerator MoveToTarget()
     {
+        float randomxd = GetRandomFloat(-15f, 15f);
         while (target != null && Vector3.Distance(transform.position, target.transform.position) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, moveSpeed * Time.deltaTime);
+            Vector3 deneme =  new Vector3(target.transform.position.x, target.transform.position.y, target.transform.position.z+randomxd);
+            transform.position = Vector3.MoveTowards(transform.position, deneme, moveSpeed * Time.deltaTime);
             yield return null;
         }
         
@@ -135,7 +136,7 @@ public class Rocket : MonoBehaviour
             boss.rocketControl == false)
         {
             AudioClip audioClip = explode;
-            AudioSource.PlayClipAtPoint(audioClip, mainCamera.transform.position, 10000);
+            AudioSource.PlayClipAtPoint(audioClip, mainCamera.transform.position, 10000); //audiomixer
             ParticleSystem instantiatedExplosion = Instantiate(explosion, transform.position, transform.rotation);
             Destroy(gameObject);
             Destroy(instantiatedExplosion.gameObject, instantiatedExplosion.main.duration);
